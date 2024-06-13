@@ -207,6 +207,6 @@ export const deleteProduct = async (req, res) => {
   }
 
   res
-    .status(201)
+    .status(200)
     .json({ msg: "Product was deleted succesfully", product: removeProduct });
 };
