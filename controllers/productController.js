@@ -75,8 +75,17 @@ export const createProduct = async (req, res) => {
 
 //TO GET ALL PRODUCTS
 export const getAllProducts = async (req, res) => {
-  const { search, productStatus, category, address, name, type, beds, sort } =
-    req.query;
+  const {
+    search,
+    productStatus,
+    category,
+    location,
+    address,
+    name,
+    type,
+    beds,
+    sort,
+  } = req.query;
 
   // Initialize queryObject
   const queryObject = {};
@@ -89,6 +98,7 @@ export const getAllProducts = async (req, res) => {
   if (search) {
     queryObject.$or = [
       { address: { $regex: search, $options: "i" } },
+      { location: { $regex: search, $options: "i" } },
       { category: { $regex: search, $options: "i" } },
       { productStatus: { $regex: search, $options: "i" } },
       { type: { $regex: search, $options: "i" } },
@@ -106,6 +116,10 @@ export const getAllProducts = async (req, res) => {
 
   if (address && address !== "all") {
     queryObject.address = address;
+  }
+
+  if (location && location !== "all") {
+    queryObject.location = location;
   }
   if (type && type !== "all") {
     queryObject.type = type;
