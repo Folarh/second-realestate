@@ -1,12 +1,7 @@
 import mongoose from "mongoose";
 
 const YoutubeSchema = new mongoose.Schema({
-  name: [
-    {
-      type: String,
-      default: "youtube.com/meandyou?",
-    },
-  ],
+  name: String,
 });
 
 export default mongoose.model("Youtube", YoutubeSchema);
