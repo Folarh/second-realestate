@@ -13,6 +13,7 @@ const ProductSchema = new mongoose.Schema(
     address: String,
     price: Number,
     description: String,
+    landSize: String,
 
     youtubeLink: String,
     location: String,

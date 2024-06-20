@@ -50,6 +50,7 @@ export const validateProductInput = withValidationErrors([
   body("propertyType").notEmpty().withMessage("title is required"),
   body("location").notEmpty().withMessage("location is reqyuired"),
   body("description").notEmpty().withMessage("description is required"),
+  body("landSize").notEmpty().withMessage("landSize is required"),
   body("productStatus")
     .isIn(Object.values(PRODUCT_STATUS))
     .withMessage("invalid product status value"),
