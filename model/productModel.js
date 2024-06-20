@@ -49,7 +49,7 @@ const ProductSchema = new mongoose.Schema(
       enum: Object.values(PRODUCT_TYPE),
       default: PRODUCT_TYPE.SHOP,
     },
-    propertyType: String,
+
     garage: Number,
 
     createdBy: {

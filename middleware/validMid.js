@@ -47,7 +47,6 @@ export const validateProductInput = withValidationErrors([
   body("garage").notEmpty().withMessage("garage is required"),
   body("features").notEmpty().withMessage("features is required"),
   body("title").notEmpty().withMessage("title is required"),
-  body("propertyType").notEmpty().withMessage("title is required"),
   body("location").notEmpty().withMessage("location is reqyuired"),
   body("description").notEmpty().withMessage("description is required"),
   body("landSize").notEmpty().withMessage("landSize is required"),
