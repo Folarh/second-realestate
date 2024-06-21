@@ -2,6 +2,7 @@ import "express-async-errors";
 import Product from "../model/productModel.js";
 import { StatusCodes } from "http-status-codes";
 import uploadImages from "../utils/uploadImage.js";
+import cloudinary from "cloudinary";
 
 export const getProductsByCategory = async (req, res) => {
   const { category, page = 1, limit = 10 } = req.query;
@@ -170,6 +171,31 @@ export const getSingleProduct = async (req, res) => {
   res.status(201).json({ product });
 };
 
+export const deleteProduct = async (req, res) => {
+  const { id } = req.params;
+  const removeProduct = await Product.findByIdAndDelete(id);
+  if (!removeProduct) {
+    return res.status(400).json({ msg: `no product with id ${id}` });
+  }
+
+  res
+    .status(200)
+    .json({ msg: "Product was deleted succesfully", product: removeProduct });
+};
+
+const deleteImages = async (imageUrls) => {
+  try {
+    const deletePromises = imageUrls.map((url) => {
+      const publicId = url.split("/").pop().split(".")[0]; // Extract public ID from URL
+      return cloudinary.uploader.destroy(publicId);
+    });
+    await Promise.all(deletePromises);
+  } catch (error) {
+    console.error("Error deleting images from Cloudinary:", error);
+    throw error;
+  }
+};
+
 export const updateProduct = async (req, res) => {
   const { id: productId } = req.params;
   const imageFiles = req.files;
@@ -183,6 +209,10 @@ export const updateProduct = async (req, res) => {
         .json({ msg: `No product with id ${productId}` });
     }
 
+    // Log the incoming request data
+
+    console.log("Request files:", req.files);
+
     // Update fields with the new data from req.body
     const updatedData = req.body;
     Object.keys(updatedData).forEach((key) => {
@@ -194,11 +224,16 @@ export const updateProduct = async (req, res) => {
       // Upload new images to Cloudinary
       const newImageUrls = await uploadImages(imageFiles);
 
-      // Merge existing and new image URLs
-      existingProduct.imageUrls = [
-        ...existingProduct.imageUrls,
-        ...newImageUrls,
-      ];
+      // Log the new image URLs
+      console.log("New image URLs:", newImageUrls);
+
+      // Delete old images from Cloudinary
+      if (existingProduct.imageUrls && existingProduct.imageUrls.length > 0) {
+        await deleteImages(existingProduct.imageUrls);
+      }
+
+      // Update the product's image URLs with the new ones
+      existingProduct.imageUrls = newImageUrls;
     }
 
     // Save the updated product
@@ -211,16 +246,4 @@ export const updateProduct = async (req, res) => {
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ message: "Failed to update product", error: error.message });
   }
-};
-
-export const deleteProduct = async (req, res) => {
-  const { id } = req.params;
-  const removeProduct = await Product.findByIdAndDelete(id);
-  if (!removeProduct) {
-    return res.status(400).json({ msg: `no product with id ${id}` });
-  }
-
-  res
-    .status(200)
-    .json({ msg: "Product was deleted succesfully", product: removeProduct });
 };
