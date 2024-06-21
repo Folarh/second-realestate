@@ -183,6 +183,7 @@ export const deleteProduct = async (req, res) => {
     .json({ msg: "Product was deleted succesfully", product: removeProduct });
 };
 
+//THIS IS A DELETE IMAGES FUNCTION FROM CLAUDINARY
 const deleteImages = async (imageUrls) => {
   try {
     const deletePromises = imageUrls.map((url) => {
@@ -201,18 +202,12 @@ export const updateProduct = async (req, res) => {
   const imageFiles = req.files;
 
   try {
-    // Fetch the existing product
     const existingProduct = await Product.findById(productId);
     if (!existingProduct) {
       return res
         .status(StatusCodes.NOT_FOUND)
         .json({ msg: `No product with id ${productId}` });
     }
-
-    // Log the incoming request data
-
-    console.log("Request files:", req.files);
-
     // Update fields with the new data from req.body
     const updatedData = req.body;
     Object.keys(updatedData).forEach((key) => {
@@ -223,9 +218,6 @@ export const updateProduct = async (req, res) => {
     if (imageFiles && imageFiles.length > 0) {
       // Upload new images to Cloudinary
       const newImageUrls = await uploadImages(imageFiles);
-
-      // Log the new image URLs
-      console.log("New image URLs:", newImageUrls);
 
       // Delete old images from Cloudinary
       if (existingProduct.imageUrls && existingProduct.imageUrls.length > 0) {
@@ -241,7 +233,6 @@ export const updateProduct = async (req, res) => {
 
     res.status(StatusCodes.OK).json({ updatedProduct });
   } catch (error) {
-    logger.error("Error updating product:", { error });
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ message: "Failed to update product", error: error.message });
