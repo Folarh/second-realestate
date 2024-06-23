@@ -197,6 +197,49 @@ const deleteImages = async (imageUrls) => {
   }
 };
 
+// export const updateProduct = async (req, res) => {
+//   const { id: productId } = req.params;
+//   const imageFiles = req.files;
+
+//   try {
+//     const existingProduct = await Product.findById(productId);
+//     if (!existingProduct) {
+//       return res
+//         .status(StatusCodes.NOT_FOUND)
+//         .json({ msg: `No product with id ${productId}` });
+//     }
+//     // Update fields with the new data from req.body
+//     const updatedData = req.body;
+//     Object.keys(updatedData).forEach((key) => {
+//       existingProduct[key] = updatedData[key];
+//     });
+
+//     // Handle image upload if there are new images
+//     if (imageFiles && imageFiles.length > 0) {
+//       // Upload new images to Cloudinary
+//       const newImageUrls = await uploadImages(imageFiles);
+
+//       // Delete old images from Cloudinary
+//       if (existingProduct.imageUrls && existingProduct.imageUrls.length > 0) {
+//         await deleteImages(existingProduct.imageUrls);
+//       }
+
+//       // Update the product's image URLs with the new ones
+//       existingProduct.imageUrls = newImageUrls;
+
+//     }
+
+//     // Save the updated product
+//     const updatedProduct = await existingProduct.save();
+
+//     res.status(StatusCodes.OK).json({ updatedProduct });
+//   } catch (error) {
+//     res
+//       .status(StatusCodes.INTERNAL_SERVER_ERROR)
+//       .json({ message: "Failed to update product", error: error.message });
+//   }
+// };
+
 export const updateProduct = async (req, res) => {
   const { id: productId } = req.params;
   const imageFiles = req.files;
@@ -208,6 +251,7 @@ export const updateProduct = async (req, res) => {
         .status(StatusCodes.NOT_FOUND)
         .json({ msg: `No product with id ${productId}` });
     }
+
     // Update fields with the new data from req.body
     const updatedData = req.body;
     Object.keys(updatedData).forEach((key) => {
@@ -219,13 +263,11 @@ export const updateProduct = async (req, res) => {
       // Upload new images to Cloudinary
       const newImageUrls = await uploadImages(imageFiles);
 
-      // Delete old images from Cloudinary
-      if (existingProduct.imageUrls && existingProduct.imageUrls.length > 0) {
-        await deleteImages(existingProduct.imageUrls);
-      }
-
-      // Update the product's image URLs with the new ones
-      existingProduct.imageUrls = newImageUrls;
+      // Append new images to existing ones
+      existingProduct.imageUrls = [
+        ...existingProduct.imageUrls,
+        ...newImageUrls,
+      ];
     }
 
     // Save the updated product
