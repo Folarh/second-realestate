@@ -263,7 +263,6 @@ export const updateProduct = async (req, res) => {
       // Upload new images to Cloudinary
       const newImageUrls = await uploadImages(imageFiles);
 
-      // Append new images to existing ones
       existingProduct.imageUrls = [
         ...existingProduct.imageUrls,
         ...newImageUrls,

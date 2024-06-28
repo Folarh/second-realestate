@@ -11,6 +11,7 @@ const ProductSchema = new mongoose.Schema(
   {
     name: String,
     address: String,
+    oldPrice: Number,
     price: Number,
     description: String,
     landSize: String,
