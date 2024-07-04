@@ -18,7 +18,7 @@ router
   .get(getAllProducts)
 
   .post(
-    upload.array("imageUrls", 10),
+    upload.array("imageUrls", 15),
     validateProductInput,
     authenticateToken,
     createProduct
