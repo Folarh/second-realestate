@@ -43,7 +43,6 @@ export const validateProductInput = withValidationErrors([
   body("name").notEmpty().withMessage("name is required"),
   body("address").notEmpty().withMessage("address is required"),
   body("price").notEmpty().withMessage("price is required"),
-  body("youtubeLink").notEmpty().withMessage("youtube link is required"),
   body("garage").notEmpty().withMessage("garage is required"),
   body("features").notEmpty().withMessage("features is required"),
   body("title").notEmpty().withMessage("title is required"),
