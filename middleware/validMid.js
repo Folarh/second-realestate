@@ -39,6 +39,7 @@ const withValidationErrors = (validateValues) => {
   ];
 };
 
+///getting started
 export const validateProductInput = withValidationErrors([
   body("name").notEmpty().withMessage("name is required"),
   body("address").notEmpty().withMessage("address is required"),
